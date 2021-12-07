@@ -7,20 +7,21 @@ import {
   RestHandler,
   RestRequest,
   setupWorker,
+  rest
 } from 'msw'
-import { rest } from 'msw'
+import { setupServer } from 'msw/node'
 
-export interface MswHandle {
+export interface MswHandler {
   method: 'head' | 'get' | 'post' | 'delete' | 'patch' | 'options'
   url: string
   func: (req: RestRequest<DefaultRequestBody, RequestParams>, res: ResponseComposition<any>, ctx: RestContext) => any
 }
-const createhandles = (handles: MswHandle[]): RestHandler<MockedRequest<DefaultRequestBody>>[] =>
-  handles.map((handle: MswHandle) => rest[handle.method](handle.url, handle.func)) as any
+const createhandlers = (handlers: MswHandler[]): RestHandler<MockedRequest<DefaultRequestBody>>[] =>
+  handlers.map((handler: MswHandler) => rest[handler.method](handler.url, handler.func)) as any
 
-export const msw = (handles: MswHandle[], env = 'development', workerUrl = '/mockServiceWorker.js') => {
+export const msw = (handlers: MswHandler[], env = 'development', workerUrl = '/mockServiceWorker.js') => {
   if (process.env.NODE_ENV === env) {
-    const worker = setupWorker(...createhandles(handles))
+    const worker = setupWorker(...createhandlers(handlers))
     worker.start({
       quiet: true,
       serviceWorker: {
@@ -28,4 +29,8 @@ export const msw = (handles: MswHandle[], env = 'development', workerUrl = '/moc
       },
     })
   }
+}
+
+export const server = (handlers: MswHandler[]) => {
+  setupServer(...createhandlers(handlers))
 }
