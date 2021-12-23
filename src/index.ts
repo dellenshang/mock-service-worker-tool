@@ -19,16 +19,14 @@ export interface MswHandler {
 const createhandlers = (handlers: MswHandler[]): RestHandler<MockedRequest<DefaultRequestBody>>[] =>
   handlers.map((handler: MswHandler) => rest[handler.method](handler.url, handler.func)) as any
 
-export const msw = (handlers: MswHandler[], env = 'development', workerUrl = '/mockServiceWorker.js') => {
-  if (process.env.NODE_ENV === env) {
-    const worker = setupWorker(...createhandlers(handlers))
-    worker.start({
-      quiet: true,
-      serviceWorker: {
-        url: workerUrl,
-      },
-    })
-  }
+export const msw = (handlers: MswHandler[], workerUrl = '/mockServiceWorker.js') => {
+  const worker = setupWorker(...createhandlers(handlers))
+  worker.start({
+    quiet: true,
+    serviceWorker: {
+      url: workerUrl,
+    },
+  })
 }
 
 export const server = (handlers: MswHandler[]) => {

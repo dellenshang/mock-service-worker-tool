@@ -4,5 +4,5 @@ export interface MswHandler {
     url: string;
     func: (req: RestRequest<DefaultRequestBody, RequestParams>, res: ResponseComposition<any>, ctx: RestContext) => any;
 }
-export declare const msw: (handlers: MswHandler[], env?: string, workerUrl?: string) => void;
+export declare const msw: (handlers: MswHandler[], workerUrl?: string) => void;
 export declare const server: (handlers: MswHandler[]) => void;
