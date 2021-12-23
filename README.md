@@ -20,7 +20,7 @@ msw(yourRestApiArray)
 
 in your tests
 ```js
-import { server } from 'mock-service-worker-tool'
+import { server } from 'mock-service-worker-tool/node'
 
 server(yourRestApiArray)
 

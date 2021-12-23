@@ -1,6 +1,5 @@
 import { setupWorker, rest } from 'msw';
-import { setupServer } from 'msw/node';
-var createhandlers = function (handlers) {
+export var createhandlers = function (handlers) {
     return handlers.map(function (handler) { return rest[handler.method](handler.url, handler.func); });
 };
 export var msw = function (handlers, workerUrl) {
@@ -12,7 +11,4 @@ export var msw = function (handlers, workerUrl) {
             url: workerUrl,
         },
     });
-};
-export var server = function (handlers) {
-    setupServer.apply(void 0, createhandlers(handlers));
 };
