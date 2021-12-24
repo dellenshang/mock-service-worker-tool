@@ -10,6 +10,8 @@ import {
   rest
 } from 'msw'
 
+type onUnhandledRequest = 'bypass' | 'warn' | 'error'
+
 export interface MswHandler {
   method: 'head' | 'get' | 'post' | 'delete' | 'patch' | 'options'
   url: string
@@ -18,10 +20,11 @@ export interface MswHandler {
 export const createhandlers = (handlers: MswHandler[]): RestHandler<MockedRequest<DefaultRequestBody>>[] =>
   handlers.map((handler: MswHandler) => rest[handler.method](handler.url, handler.func)) as any
 
-export const msw = (handlers: MswHandler[], workerUrl = '/mockServiceWorker.js') => {
+export const msw = (handlers: MswHandler[], onUnhandledRequest: onUnhandledRequest = 'warn', workerUrl = '/mockServiceWorker.js') => {
   const worker = setupWorker(...createhandlers(handlers))
   worker.start({
     quiet: true,
+    onUnhandledRequest,
     serviceWorker: {
       url: workerUrl,
     },
