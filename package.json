@@ -1,6 +1,7 @@
 {
   "name": "mock-service-worker-tool",
-  "version": "1.1.0",
+  "type": "module",
+  "version": "1.1.1",
   "description": "use mock service worker in your App with TS",
   "main": "dist/index.js",
   "scripts": {
